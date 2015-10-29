@@ -62,7 +62,7 @@ namespace io{
                         mutable char error_message_buffer[256];
                 };
 
-                const int max_file_name_length = 255;
+                constexpr static int max_file_name_length = 255;
 
                 struct with_file_name{
                         with_file_name(){
@@ -78,27 +78,19 @@ namespace io{
                 };
 
                 struct with_file_line{
-                        with_file_line(){
-                                file_line = -1;
-                        }
-                       
                         void set_file_line(int file_line){
                                 this->file_line = file_line;
                         }
 
-                        int file_line;
+                        int file_line = -1;
                 };
 
                 struct with_errno{
-                        with_errno(){
-                                errno_value = 0;
-                        }
-                       
                         void set_errno(int errno_value){
                                 this->errno_value = errno_value;
                         }
 
-                        int errno_value;
+                        int errno_value = 0;
                 };
 
                 struct can_not_open_file :
@@ -314,7 +306,7 @@ namespace io{
         ////////////////////////////////////////////////////////////////////////////
 
         namespace error{
-                const int max_column_name_length = 63;
+                constexpr static int max_column_name_length = 63;
                 struct with_column_name{
                         with_column_name(){
                                 std::memset(column_name, 0, max_column_name_length+1);
@@ -329,7 +321,7 @@ namespace io{
                 };
 
 
-                const int max_column_content_length = 63;
+                constexpr static int max_column_content_length = 63;
 
                 struct with_column_content{
                         with_column_content(){
@@ -488,14 +480,14 @@ namespace io{
         }
 
         typedef unsigned ignore_column;
-        static const ignore_column ignore_no_column = 0;
-        static const ignore_column ignore_extra_column = 1;
-        static const ignore_column ignore_missing_column = 2;
+        constexpr static ignore_column ignore_no_column = 0;
+        constexpr static ignore_column ignore_extra_column = 1;
+        constexpr static ignore_column ignore_missing_column = 2;
 
         template<char ... trim_char_list>
         struct trim_chars{
         private:
-                constexpr static bool is_trim_char(char c){
+                constexpr static bool is_trim_char(char /*c*/){
                         return false;
                 }
        
@@ -516,7 +508,7 @@ namespace io{
 
 
         struct no_comment{
-                static bool is_comment(const char*line){
+                static bool is_comment(const char*/*line*/){
                         return false;
                 }
         };
@@ -524,7 +516,7 @@ namespace io{
         template<char ... comment_start_char_list>
         struct single_line_comment{
         private:
-                constexpr static bool is_comment_start_char(char c){
+                constexpr static bool is_comment_start_char(char /*c*/){
                         return false;
                 }
        
@@ -568,7 +560,7 @@ namespace io{
                         return col_begin;
                 }
 
-                static void unescape(char*&col_begin, char*&col_end){
+                static void unescape(char*&/*col_begin*/, char*&/*col_end*/){
 
                 }
         };
