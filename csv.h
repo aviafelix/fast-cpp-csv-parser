@@ -508,7 +508,7 @@ namespace io{
 
 
         struct no_comment{
-                static bool is_comment(const char*/*line*/){
+                static bool is_comment(const char* /*line*/){
                         return false;
                 }
         };
