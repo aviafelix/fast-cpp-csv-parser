@@ -89,6 +89,8 @@ namespace io {
             linescount += countLines( buff, cnt );
         }
 
+        in.close();
+
         return linescount;
     }
 
@@ -205,20 +207,22 @@ namespace io {
         std::future <int> bytes_read;
         #endif
 
-        FILE*file;
-        char*buffer;
+        FILE *file;
+        char *buffer;
 
         int data_begin;
         int data_end;
 
         char file_name[error::max_file_name_length + 1];
         unsigned file_line;
+        unsigned int lines_count;
 
         void open_file(const char *file_name)
         {
             // We open the file in binary mode as it makes no difference under *nix
             // and under Windows we handle \r\n newlines ourself.
             file = std::fopen(file_name, "rb");
+
             if (file == 0) {
 
                 // store errno as soon as possible,
@@ -234,6 +238,7 @@ namespace io {
         void init()
         {
             file_line = 0;
+            lines_count = numberOfLines(file_name);
 
             // Tell the std library that we want to do the buffering ourself.
             std::setvbuf(file, 0, _IONBF, 0);
@@ -252,8 +257,10 @@ namespace io {
             data_end = std::fread(buffer, 1, 2 * block_len, file);
 
             // Ignore UTF-8 BOM
-            if (data_end >= 3 && buffer[0] == '\xEF' && buffer[1] == '\xBB' && buffer[2] == '\xBF')
+            if (data_end >= 3 && buffer[0] == '\xEF' && buffer[1] == '\xBB' && buffer[2] == '\xBF') {
+
                 data_begin = 3;
+            }
 
             #ifndef CSV_IO_NO_THREAD
             if (data_end == 2 * block_len) {
@@ -321,6 +328,11 @@ namespace io {
         unsigned get_file_line() const
         {
             return file_line;
+        }
+
+        const unsigned int get_number_of_lines() const
+        {
+            return lines_count;
         }
 
         char *next_line()
@@ -1299,7 +1311,7 @@ namespace io {
         template<class ...Args>
         explicit CSVReader(Args...args):in(std::forward<Args>(args)...)
         {
-            std::fill(row, row+column_count, nullptr);
+            std::fill(row, row + column_count, nullptr);
             col_order.resize(column_count);
 
             for (unsigned i = 0; i < column_count; ++i)
@@ -1395,6 +1407,11 @@ namespace io {
         unsigned get_file_line() const
         {
             return in.get_file_line();
+        }
+
+        const unsigned int get_number_of_lines() const
+        {
+            return in.get_number_of_lines();
         }
 
     private:
