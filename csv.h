@@ -84,12 +84,12 @@ namespace io{
 
                 unsigned int linescount = 0;
 
-            while ( int cnt = fileRead(in, buff) )
-            {
+                while ( int cnt = fileRead(in, buff) )
+                {
                         linescount += countLines( buff, cnt );
-            }
+                }
 
-            return linescount;
+                return linescount;
         }
 
         ////////////////////////////////////////////////////////////////////////////
