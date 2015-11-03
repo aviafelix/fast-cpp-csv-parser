@@ -48,53 +48,6 @@
 namespace io {
 
     ////////////////////////////////////////////////////////////////////////////
-    //                              Aux functions                             //
-    ////////////////////////////////////////////////////////////////////////////
-    unsigned int countLines( const std::vector <char> &buff, int sz )
-    {
-        unsigned int linescount = 0;
-        const char *p = &buff[0];
-
-        for ( int i = 0; i < sz; i++ )
-        {
-            if ( p[i] == '\n' ) {
-
-                ++linescount;
-            }
-        }
-
-        return linescount;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    unsigned int fileRead( std::istream &is, std::vector <char> &buff )
-    {
-        is.read( &buff[0], buff.size() );
-
-        return is.gcount();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    unsigned int numberOfLines(char const *filename)
-    {
-        const int BFSIZE = 1024 * 1024;
-        std::vector <char> buff( BFSIZE );
-
-        std::ifstream in( filename );
-
-        unsigned int linescount = 0;
-
-        while ( int cnt = fileRead(in, buff) )
-        {
-            linescount += countLines( buff, cnt );
-        }
-
-        in.close();
-
-        return linescount;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
     //                               LineReader                               //
     ////////////////////////////////////////////////////////////////////////////
 
@@ -271,6 +224,53 @@ namespace io {
                 });
             }
             #endif
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        //                              Aux functions                             //
+        ////////////////////////////////////////////////////////////////////////////
+        unsigned int countLines( const std::vector <char> &buff, int sz )
+        {
+            unsigned int linescount = 0;
+            const char *p = &buff[0];
+
+            for ( int i = 0; i < sz; i++ )
+            {
+                if ( p[i] == '\n' ) {
+
+                    ++linescount;
+                }
+            }
+
+            return linescount;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        unsigned int fileRead( std::istream &is, std::vector <char> &buff )
+        {
+            is.read( &buff[0], buff.size() );
+
+            return is.gcount();
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        unsigned int numberOfLines(char const *filename)
+        {
+            const int BFSIZE = 1024 * 1024;
+            std::vector <char> buff( BFSIZE );
+
+            std::ifstream in( filename );
+
+            unsigned int linescount = 0;
+
+            while ( int cnt = fileRead(in, buff) )
+            {
+                linescount += countLines( buff, cnt );
+            }
+
+            in.close();
+
+            return linescount;
         }
 
     public:
